@@ -343,6 +343,11 @@ class JanusPlugin {
     await _disposeMediaStreams();
   }
 
+  Future<void> hangupWithoutDisposing() async {
+    _cancelPollingTimer();
+    await _disposeRemoteMediaStreamsOnly();
+  }
+
   Future<void> _disposeMediaStreams(
       {ignoreRemote = false, video = true, audio = true}) async {
     _context._logger
@@ -362,6 +367,15 @@ class JanusPlugin {
         webRTCHandle?.localStream?.dispose();
       }
     }
+    if (webRTCHandle!.remoteStream != null && !ignoreRemote) {
+      webRTCHandle?.remoteStream?.getTracks().forEach((element) async {
+        await element.stop();
+      });
+      webRTCHandle?.remoteStream?.dispose();
+    }
+  }
+
+  Future<void> _disposeRemoteMediaStreamsOnly({ignoreRemote = false}) async {
     if (webRTCHandle!.remoteStream != null && !ignoreRemote) {
       webRTCHandle?.remoteStream?.getTracks().forEach((element) async {
         await element.stop();
@@ -390,6 +404,25 @@ class JanusPlugin {
     await webRTCHandle?.peerConnection?.close();
     await webRTCHandle?.remoteStream?.dispose();
     await webRTCHandle?.localStream?.dispose();
+    await webRTCHandle?.peerConnection?.dispose();
+  }
+
+  Future<void> disposeAnther() async {
+    this.pollingActive = false;
+    _pollingTimer?.cancel();
+    _streamController?.close();
+    _remoteStreamController?.close();
+    _messagesStreamController?.close();
+    _typedMessagesStreamController?.close();
+    _localStreamController?.close();
+    _remoteTrackStreamController?.close();
+    _dataStreamController?.close();
+    _onDataStreamController?.close();
+    _renegotiationNeededController?.close();
+    _wsStreamSubscription?.cancel();
+
+    await webRTCHandle?.peerConnection?.close();
+    await webRTCHandle?.remoteStream?.dispose();
     await webRTCHandle?.peerConnection?.dispose();
   }
 
@@ -506,6 +539,42 @@ class JanusPlugin {
       } else {
         webRTCHandle!.localStream =
             await navigator.mediaDevices.getUserMedia(mediaConstraints);
+      }
+      if (_context._isUnifiedPlan && !_context._usePlanB) {
+        _context._logger.finest('using unified plan');
+        webRTCHandle!.localStream!.getTracks().forEach((element) async {
+          _context._logger.finest('adding track in peerconnection');
+          _context._logger.finest(element.toString());
+          await webRTCHandle!.peerConnection!
+              .addTrack(element, webRTCHandle!.localStream!);
+        });
+      } else {
+        _localStreamController!.sink.add(webRTCHandle!.localStream);
+        await webRTCHandle!.peerConnection!
+            .addStream(webRTCHandle!.localStream!);
+      }
+      return webRTCHandle!.localStream;
+    } else {
+      _context._logger.severe("error webrtchandle cant be null");
+      return null;
+    }
+  }
+
+
+
+  /// Inject media stream from outside only 
+  Future<MediaStream?> injectMedia(MediaStream? injectedLocalStream,
+      {bool? useDisplayMediaDevices = false,
+      Map<String, dynamic>? mediaConstraints,}) async {
+    await _disposeMediaStreams(ignoreRemote: true);
+
+ 
+    _context._logger.fine(mediaConstraints);
+    if (webRTCHandle != null) {
+      if (useDisplayMediaDevices == true) {
+        webRTCHandle!.localStream = injectedLocalStream;
+      } else {
+        webRTCHandle!.localStream = injectedLocalStream;
       }
       if (_context._isUnifiedPlan && !_context._usePlanB) {
         _context._logger.finest('using unified plan');

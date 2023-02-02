@@ -273,6 +273,11 @@ class JanusVideoRoomPlugin extends JanusPlugin {
 
   /// sends hangup request on current active [JanusVideoRoomPlugin] to tear off active PeerConnection in-effect leaving the room.
   Future<void> hangup() async {
+    // await super.hangup();
+    await this.send(data: {"request": "leave"});
+  }
+
+  Future<void> hangupWithWithoutDisposing() async {
     await super.hangup();
     await this.send(data: {"request": "leave"});
   }
@@ -291,7 +296,8 @@ class JanusVideoRoomPlugin extends JanusPlugin {
               VideoRoomJoinedEvent.fromJson(typedEvent.event.plugindata?.data);
           _typedMessagesSink?.add(typedEvent);
         } else if (typedEvent.event.plugindata?.data['videoroom'] == 'event' &&
-            typedEvent.event.plugindata?.data['unpublished'] != null&&typedEvent.event.plugindata?.data['unpublished'] is int) {
+            typedEvent.event.plugindata?.data['unpublished'] != null &&
+            typedEvent.event.plugindata?.data['unpublished'] is int) {
           typedEvent.event.plugindata?.data =
               VideoRoomUnPublishedEvent.fromJson(
                   typedEvent.event.plugindata?.data);

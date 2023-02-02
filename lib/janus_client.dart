@@ -130,11 +130,17 @@ part './interfaces/sip/events/sip_proceeding_event.dart';
 part './interfaces/sip/events/sip_calling_event.dart';
 
 class JanusClient {
+
   late JanusTransport _transport;
+  
   String? _apiSecret;
+  
   String? _token;
+  
   late Duration _pollingInterval;
+  
   late bool _withCredentials;
+  
   late int? _maxEvent;
   late List<RTCIceServer>? _iceServers = [];
   late int _refreshInterval;

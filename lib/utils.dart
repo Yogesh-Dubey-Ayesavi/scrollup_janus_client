@@ -1,6 +1,7 @@
 part of janus_client;
 
 class JanusWebRTCHandle {
+  
   MediaStream? remoteStream;
   MediaStream? localStream;
   RTCPeerConnection? peerConnection;
@@ -249,3 +250,16 @@ Future<String> getCameraDeviceId(front) async {
   }
   return (front ? videoDevices.first.deviceId : videoDevices.last.deviceId);
 }
+
+
+  Future<List<MediaDeviceInfo>> getVideoInputDevicesByUtils() async {
+    return (await navigator.mediaDevices.enumerateDevices())
+        .where((element) => element.kind == 'videoinput')
+        .toList();
+  }
+
+  Future<List<MediaDeviceInfo>> getAudioInputDevicesByUtils() async {
+    return (await navigator.mediaDevices.enumerateDevices())
+        .where((element) => element.kind == 'audioinput')
+        .toList();
+  }

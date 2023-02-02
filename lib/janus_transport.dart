@@ -12,11 +12,13 @@ abstract class JanusTransport {
   void dispose();
 }
 
-///
+
 /// This transport class is provided to [JanusClient] instances in transport property in order to <br>
 /// inform the plugin that we need to use Rest as a transport mechanism for communicating with Janus Server.<br>
 /// therefore for events sent by Janus server is received with the help of polling.
+
 class RestJanusTransport extends JanusTransport {
+
   RestJanusTransport({String? url}) : super(url: url);
 
   /*
@@ -67,7 +69,7 @@ class RestJanusTransport extends JanusTransport {
 
 ///
 /// This transport class is provided to [JanusClient] instances in transport property in order to <br>
-/// inform the plugin that we need to use WebSockets as a transport mechanism for communicating with Janus Server.<br>
+/// inform the plugin that we need to use [WebSocketChannel] as a transport mechanism for communicating with Janus Server.<br>
 class WebSocketJanusTransport extends JanusTransport {
   WebSocketJanusTransport({String? url, this.pingInterval}) : super(url: url);
   WebSocketChannel? channel;

@@ -1,9 +1,5 @@
 Map<String, String> servermap = {
-  'janus_ws': 'wss://janus.conf.meetecho.com/ws',
-  'janus_rest': 'https://janus.conf.meetecho.com/janus',
-  'servercheap': 'ws://107.152.35.248/websocket',
-  'onemandev_master_ws': 'wss://master-janus.onemandev.tech/websocket',
-  'onemandev_master_rest': 'https://master-janus.onemandev.tech/rest',
-  'onemandev_unified_rest': 'https://unified-janus.onemandev.tech/rest',
-  'onemandev_unified_ws': 'wss://unified-janus.onemandev.tech/websocket'
+  'janus_ws': 'ws://15.206.123.244:8188',
+  'janus_rest': 'http://15.206.123.244/janus',
+  'servercheap': 'wss://proficientio.top/websocket',
 };

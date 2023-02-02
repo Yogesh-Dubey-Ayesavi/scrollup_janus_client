@@ -7,13 +7,12 @@ import 'package:janus_client_example/typed_examples/streaming.dart';
 import 'package:janus_client_example/typed_examples/video_call.dart';
 import 'typed_examples/text_room.dart';
 
-
 void main() {
   runApp(MaterialApp(
     initialRoute: '/',
     themeMode: ThemeMode.light,
     debugShowCheckedModeBanner: false,
-    routes: {
+    routes: {  
       "/google-meet": (c) => GoogleMeet(),
       "/typed_sip": (c) => TypedSipExample(),
       "/typed_streaming": (c) => TypedStreamingV2(),

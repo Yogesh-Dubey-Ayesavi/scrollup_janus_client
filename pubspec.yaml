@@ -1,7 +1,7 @@
-name: janus_client
-description: A feature rich Janus Webrtc package
-version: 2.2.9
-homepage: https://github.com/shivanshtalwar0/flutter_janus_client
+name: scrollup_janus_client
+description: An extension of janus_client
+version: 2.3.0
+homepage: https://github.com/Yogesh-Dubey-Ayesavi/scrollup_janus_client
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
